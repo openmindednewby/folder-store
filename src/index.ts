@@ -1,0 +1,10 @@
+export { FolderUnsupportedError, StorageExistsError, UnsafePathError } from './errors';
+export { FolderCapability } from './FolderCapability';
+export { createFolderStorage } from './folderStorage';
+export type { FolderStorage, FolderStorageOptions } from './folderStorage';
+export { browserFolderEnv, getFolderSupport, pickFolder, reopenFolder, requestFolderAccess } from './folderSupport';
+export type { FolderEnv, FolderSupport, RememberedFolder } from './folderSupport';
+export { createHandleMemory } from './handleMemory';
+export type { HandleMemory, HandleMemoryOptions } from './handleMemory';
+export type { FolderDirectoryHandle, FolderFile, FolderFileHandle, FolderLocks, FolderWritable } from './handles';
+export { ReopenState } from './ReopenState';

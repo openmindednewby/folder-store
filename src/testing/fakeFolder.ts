@@ -20,7 +20,7 @@ function toBytes(data: string | Uint8Array): Uint8Array {
 }
 
 function makeWritable(entry: FakeEntry, state: FakeFolderState): FolderWritable {
-  let buffer = new Uint8Array();
+  let buffer: Uint8Array = new Uint8Array();
   return {
     write: async (data): Promise<void> => {
       await Promise.resolve();
