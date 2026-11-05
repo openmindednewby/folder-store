@@ -1,6 +1,6 @@
 {
   "name": "@dloizides/folder-store",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Browser folder storage over the File System Access API: remembered handle, re-permission, support check, Web Locks across tabs, exclusive writes.",
   "keywords": [
     "file-system-access",
