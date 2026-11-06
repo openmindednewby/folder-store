@@ -6,5 +6,9 @@ export { browserFolderEnv, getFolderSupport, pickFolder, reopenFolder, requestFo
 export type { FolderEnv, FolderSupport, RememberedFolder } from './folderSupport';
 export { createHandleMemory } from './handleMemory';
 export type { HandleMemory, HandleMemoryOptions } from './handleMemory';
+export { createRecentFolders } from './recentFolders';
+export type { RecentFolders, RecentFoldersOptions } from './recentFolders';
+export type { RecentFolder } from './recentFolderList';
+export type { PruneResult } from './pruneRecentFolders';
 export type { FolderDirectoryHandle, FolderFile, FolderFileHandle, FolderLocks, FolderWritable } from './handles';
 export { ReopenState } from './ReopenState';

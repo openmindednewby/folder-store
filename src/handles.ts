@@ -22,6 +22,7 @@ export interface FolderDirectoryHandle {
   keys(): AsyncIterable<string>;
   queryPermission(descriptor: { mode: 'readwrite' }): Promise<PermissionState>;
   requestPermission(descriptor: { mode: 'readwrite' }): Promise<PermissionState>;
+  isSameEntry?(other: FolderDirectoryHandle): Promise<boolean>;
 }
 
 export interface FolderLocks {
