@@ -32,6 +32,19 @@ Paths are relative with forward slashes; `.` and `..` are refused.
 
 `StorageExistsError` is recognised by its `name`, so a consumer's own class of that name works across package copies.
 
+## Recent folders
+
+`createRecentFolders({ appId, indexedDB?, max = 5, now? })` keeps a newest-first list of `{ handle, name, usedAt }` per app, under the key `recent:<appId>` in the same IndexedDB store as the remembered handle.
+
+| Method | Behaviour |
+|---|---|
+| `list` | The stored list, newest first |
+| `remember(handle)` | Moves the folder first (no duplicate), keeps at most `max` |
+| `forget(handle)` | Removes the folder |
+| `prune(open?)` | Drops folders that are gone (listing fails while granted) or denied, keeps those that only need a prompt; returns `{ kept, dropped, openDropped }` |
+
+Folders are matched with `isSameEntry` when the handle has it, else by name.
+
 ## Limits
 
 Web Locks cover the tabs of one browser. A second browser, PC or a command line tool on the same folder is not locked out: `writeNew` narrows that window by re-checking the file after taking the writer, but a sync tool can still make a copy, so callers should detect duplicates afterwards.
