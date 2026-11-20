@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { FolderUnsupportedError } from './errors';
 import { FolderCapability } from './FolderCapability';
@@ -63,7 +63,12 @@ describe('getFolderSupport AC-03', () => {
 });
 
 describe('createFolderStorage AC-03', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('with no Web Locks, refuses, so no unlocked write can happen', () => {
+    vi.stubGlobal('navigator', {});
     const create = (): unknown => createFolderStorage(createFakeFolder());
 
     expect(create).toThrow(FolderUnsupportedError);
