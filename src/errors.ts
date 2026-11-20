@@ -28,3 +28,10 @@ export class FolderUnsupportedError extends Error {
 export function hasErrorName(error: unknown, ...names: string[]): boolean {
   return typeof error === 'object' && error !== null && names.includes(String((error as { name?: unknown }).name));
 }
+
+export const FOLDER_GONE_ERRORS: readonly string[] = ['NotFoundError', 'NotAllowedError', 'NotReadableError'];
+
+/** Whether an error means the folder was deleted, moved or refused. */
+export function isFolderGone(error: unknown): boolean {
+  return error instanceof Error && hasErrorName(error, ...FOLDER_GONE_ERRORS);
+}

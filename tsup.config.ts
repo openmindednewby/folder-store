@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: { index: 'src/index.ts', 'testing/fakeFolder': 'src/testing/fakeFolder.ts' },
+  entry: { index: 'src/index.ts', 'react/index': 'src/react/index.ts', 'testing/fakeFolder': 'src/testing/fakeFolder.ts' },
   format: ['cjs', 'esm'],
   dts: true,
   splitting: false,

@@ -1,3 +1,4 @@
+import { answerWithin } from './answerWithin';
 import { FolderUnsupportedError, hasErrorName } from './errors';
 import { FolderCapability } from './FolderCapability';
 import type { FolderDirectoryHandle, FolderLocks } from './handles';
@@ -20,7 +21,11 @@ export interface FolderSupport {
 
 export type RememberedFolder =
   | { state: ReopenState.None; handle: null }
-  | { state: ReopenState.Granted | ReopenState.NeedsPermission; handle: FolderDirectoryHandle };
+  | { state: ReopenState.Granted | ReopenState.NeedsPermission | ReopenState.NoAnswer; handle: FolderDirectoryHandle };
+
+export interface ReopenOptions {
+  answerWithinMs?: number;
+}
 
 interface BrowserGlobals {
   isSecureContext?: boolean;
@@ -83,12 +88,15 @@ export async function pickFolder(memory: HandleMemory, env: FolderEnv = browserF
   return handle;
 }
 
-/** Finds the remembered folder and whether it needs permission again; never prompts. */
-export async function reopenFolder(memory: HandleMemory): Promise<RememberedFolder> {
-  const handle = await memory.load();
+/** Finds the remembered folder and whether it needs permission again; never prompts. With `answerWithinMs`, a folder that does not answer in time reports NoAnswer. */
+export async function reopenFolder(memory: HandleMemory, options: ReopenOptions = {}): Promise<RememberedFolder> {
+  const handle = await answerWithin(memory.load(), options.answerWithinMs, null);
   if (!handle) {
     return { state: ReopenState.None, handle: null };
   }
-  const permission = await handle.queryPermission(READ_WRITE);
+  const permission = await answerWithin<PermissionState | null>(handle.queryPermission(READ_WRITE), options.answerWithinMs, null);
+  if (permission === null) {
+    return { state: ReopenState.NoAnswer, handle };
+  }
   return { state: permission === 'granted' ? ReopenState.Granted : ReopenState.NeedsPermission, handle };
 }

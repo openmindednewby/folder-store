@@ -52,3 +52,20 @@ Web Locks cover the tabs of one browser. A second browser, PC or a command line 
 ## Testing
 
 `@dloizides/folder-store/testing` exports `createFakeFolder` and `createFakeLocks`. Each fake call yields once, so concurrent calls interleave.
+
+## Time-limited reopen and the recent-folder switch (0.3.0)
+
+A remembered handle can stop answering (the folder's drive is gone): `queryPermission` never settles. Pass a limit and the app never waits forever.
+
+```ts
+const remembered = await reopenFolder(memory, { answerWithinMs: 3000 }); // NoAnswer: the handle did not answer; offer the folder picker, keep the handle
+if (remembered.state === ReopenState.NoAnswer) showChoose(remembered.handle.name);
+```
+
+`isFolderGone(error)` is true for NotFoundError, NotAllowedError and NotReadableError. `openRecentFolder(handle, { memory, recents, open, onGone })` switches to a recent folder from a click; a gone folder leaves the list and memory.
+
+React apps take the same switch as a hook from `@dloizides/folder-store/react` (react is an optional peer):
+
+```ts
+const { recent, openRecent, remember } = useRecentSwitch({ appId: 'my-app', memory, open, onGone, report }); // report: the message of a failed switch
+```

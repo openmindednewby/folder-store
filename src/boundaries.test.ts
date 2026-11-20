@@ -13,14 +13,28 @@ function walk(dir: string): string[] {
 
 const files = walk(join(ROOT, 'src'));
 const production = files.filter((file) => !file.endsWith('.test.ts'));
+const REACT_DIR = join(ROOT, 'src', 'react');
+const core = production.filter((file) => !file.startsWith(REACT_DIR));
+const reactEntry = production.filter((file) => file.startsWith(REACT_DIR));
+
+function outsideImports(sources: string[]): string[] {
+  return sources.flatMap((file) => readFileSync(file, 'utf8').match(/from '[^.][^']*'/g) ?? []);
+}
 const PRODUCT_TERMS = ['invoice', 'τιμολ', 'iban', 'vatnumber'];
 
 describe('package boundaries', () => {
-  it('with production source, imports only its own files', () => {
-    const imports = production.flatMap((file) => readFileSync(file, 'utf8').match(/from '[^.][^']*'/g) ?? []);
+  it('with core source, imports only its own files', () => {
+    const imports = outsideImports(core);
 
-    expect(production.length).toBeGreaterThan(3);
+    expect(core.length).toBeGreaterThan(3);
     expect(imports).toEqual([]);
+  });
+
+  it('with the react entry, imports only its own files and react', () => {
+    const imports = outsideImports(reactEntry);
+
+    expect(reactEntry.length).toBeGreaterThan(0);
+    expect(new Set(imports)).toEqual(new Set(["from 'react'"]));
   });
 
   it('with every source file, the readme and the manifest, holds no product term', () => {

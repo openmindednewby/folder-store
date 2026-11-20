@@ -1,9 +1,11 @@
-export { FolderUnsupportedError, StorageExistsError, UnsafePathError } from './errors';
+export { FOLDER_GONE_ERRORS, FolderUnsupportedError, isFolderGone, StorageExistsError, UnsafePathError } from './errors';
 export { FolderCapability } from './FolderCapability';
 export { createFolderStorage } from './folderStorage';
 export type { FolderStorage, FolderStorageOptions } from './folderStorage';
 export { browserFolderEnv, getFolderSupport, pickFolder, reopenFolder, requestFolderAccess } from './folderSupport';
-export type { FolderEnv, FolderSupport, RememberedFolder } from './folderSupport';
+export type { FolderEnv, FolderSupport, RememberedFolder, ReopenOptions } from './folderSupport';
+export { openRecentFolder } from './openRecentFolder';
+export type { OpenRecentDeps } from './openRecentFolder';
 export { createHandleMemory } from './handleMemory';
 export type { HandleMemory, HandleMemoryOptions } from './handleMemory';
 export { createRecentFolders } from './recentFolders';

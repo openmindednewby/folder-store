@@ -145,6 +145,32 @@ describe('reopenFolder (AC-02 at unit level only)', () => {
 
     expect(reopened).toEqual({ state: ReopenState.NeedsPermission, handle: folder });
   });
+
+  it('with a remembered folder whose permission check never answers and a time limit, reports no answer and keeps the handle', async () => {
+    const folder = { name: 'Invoices', queryPermission: () => new Promise<PermissionState>(() => undefined) } as unknown as FolderDirectoryHandle;
+    const memory = memoryWith(folder);
+
+    const reopened = await reopenFolder(memory, { answerWithinMs: 10 });
+
+    expect(reopened).toEqual({ state: ReopenState.NoAnswer, handle: folder });
+    expect(memory.current()).toBe(folder);
+  });
+
+  it('with a remembered-folder store that never answers and a time limit, reports none', async () => {
+    const memory: HandleMemory = { load: () => new Promise(() => undefined), save: () => Promise.resolve(), forget: () => Promise.resolve() };
+
+    const reopened = await reopenFolder(memory, { answerWithinMs: 10 });
+
+    expect(reopened).toEqual({ state: ReopenState.None, handle: null });
+  });
+
+  it('with a time limit and a folder that answers in time, reports its permission', async () => {
+    const folder = createFakeFolder();
+
+    const reopened = await reopenFolder(memoryWith(folder), { answerWithinMs: 1000 });
+
+    expect(reopened).toEqual({ state: ReopenState.Granted, handle: folder });
+  });
 });
 
 describe('requestFolderAccess', () => {
